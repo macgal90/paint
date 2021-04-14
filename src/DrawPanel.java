@@ -43,6 +43,9 @@ public class DrawPanel extends JPanel implements MouseListener, MouseMotionListe
             if (!ellipse.isEmpty() && clearList.get(clearList.size() - 1) == "e") {
                 ellipse.remove(ellipse.size() - 1);
             }
+            if (!line.isEmpty() && clearList.get(clearList.size() - 1) == "l") {
+                line.remove(line.size() - 1);
+            }
             repaint();
             clearList.remove(clearList.size() - 1);
             color.remove(color.size() - 1);
@@ -111,8 +114,8 @@ public class DrawPanel extends JPanel implements MouseListener, MouseMotionListe
             Ellipse2D ellipse = new Ellipse2D.Double(posX - xWidth, topY - yHeight, width, height);
             g2d.fill(ellipse);
         }
-        if(choise =="Linia") {
-            Line2D line = new Line2D.Double(posX- xWidth,topY-yHeight,posX2-xWidth,topY2-yHeight);
+        if (choise == "Linia") {
+            Line2D line = new Line2D.Double(posX - xWidth, topY - yHeight, posX2 - xWidth, topY2 - yHeight);
             g2d.draw(line);
         }
     }
@@ -131,26 +134,17 @@ public class DrawPanel extends JPanel implements MouseListener, MouseMotionListe
         if (choise == "Kwadrat") {
             clearList.add("r");
             rectang.add(new Rectangle2D.Double(posX - xWidth, topY - yHeight, width, height));
-            if (newColor != null)
-                color.add(newColor);
-            else
-                color.add(Color.BLACK);
+            addColor();
         }
         if (choise == "Elipsa") {
             clearList.add("e");
             ellipse.add(new Ellipse2D.Double(posX - xWidth, topY - yHeight, width, height));
-            if (newColor != null)
-                color.add(newColor);
-            else
-                color.add(Color.BLACK);
+            addColor();
         }
         if (choise == "Linia") {
             clearList.add("l");
             line.add(new Line2D.Double(posX - xWidth, topY - yHeight, posX2 - xWidth, topY2 - yHeight));
-            if (newColor != null)
-                color.add(newColor);
-            else
-                color.add(Color.BLACK);
+            addColor();
         }
     }
 
@@ -171,10 +165,7 @@ public class DrawPanel extends JPanel implements MouseListener, MouseMotionListe
         if (choise == "Pędzel") {
             clearList.add("p");
             point.add(new Rectangle2D.Double(e.getX() - xWidth, e.getY() - yHeight, 3, 3));
-            if (newColor != null)
-                color.add(newColor);
-            else
-                color.add(Color.BLACK);
+            addColor();
             repaint();
         }
 
@@ -184,6 +175,13 @@ public class DrawPanel extends JPanel implements MouseListener, MouseMotionListe
     @Override
     public void mouseMoved(MouseEvent e) {
 
+    }
+
+    public void addColor() {
+        if (newColor != null)
+            color.add(newColor);
+        else
+            color.add(Color.BLACK);
     }
 
     public void drawLine(MouseEvent e) {
