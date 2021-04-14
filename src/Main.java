@@ -24,8 +24,8 @@ public class Main extends JFrame {
         addMouseMotionListener(draw);
 
         int y = 30;
-        String[] tab = {"Wyczyść", "Cofnij", "Pędzel", "Kwadrat", "Elipsa", "Kolor", "Kolor tła", "Zapisz"};
-        for (int i = 0; i <= 7; i++) {
+        String[] tab = {"Wyczyść", "Cofnij", "Pędzel", "Linia", "Kwadrat", "Elipsa", "Kolor", "Kolor tła", "Zapisz"};
+        for (int i = 0; i <= 8; i++) {
             JButton button = new JButton("");
             add(button);
             button.setName(tab[i]);
@@ -57,16 +57,19 @@ public class Main extends JFrame {
                         draw.setChoise(tab[4]);
                     }
                     if (button.getText() == tab[5]) {
-                        Color newColor = JColorChooser.showDialog(null,
-                                "Wybierz kolor", draw.getBackground());
-                        draw.setNewColor(newColor);
+                        draw.setChoise(tab[5]);
                     }
                     if (button.getText() == tab[6]) {
                         Color newColor = JColorChooser.showDialog(null,
                                 "Wybierz kolor", draw.getBackground());
+                        draw.setNewColor(newColor);
+                    }
+                    if (button.getText() == tab[7]) {
+                        Color newColor = JColorChooser.showDialog(null,
+                                "Wybierz kolor", draw.getBackground());
                         draw.setBackground(newColor);
                     }
-                    if(button.getText() == tab[7])
+                    if (button.getText() == tab[8])
                         draw.save();
                 }
             });

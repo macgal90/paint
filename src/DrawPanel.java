@@ -5,20 +5,20 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.geom.Ellipse2D;
+import java.awt.geom.Line2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Iterator;
 
 public class DrawPanel extends JPanel implements MouseListener, MouseMotionListener {
     int posX, posX2, topY, topY2, width, height;
     boolean first = true;
     static int xWidth = 50 + 7, yHeight = 50 + 30;
     public ArrayList<Rectangle2D> rectang = new ArrayList<Rectangle2D>();
-    public Iterator<Rectangle2D> re = rectang.iterator();
     public ArrayList<Rectangle2D> point = new ArrayList<Rectangle2D>();
     public ArrayList<Ellipse2D> ellipse = new ArrayList<Ellipse2D>();
+    public ArrayList<Line2D> line = new ArrayList<Line2D>();
     public ArrayList<String> clearList = new ArrayList<>();
     public ArrayList<Color> color = new ArrayList<>();
     private String choise;
@@ -33,20 +33,16 @@ public class DrawPanel extends JPanel implements MouseListener, MouseMotionListe
     }
 
     void back() {
-        if (!rectang.isEmpty() && !clearList.isEmpty() && clearList.get(clearList.size() - 1) == "r") {
-            rectang.remove(rectang.size() - 1);
-            repaint();
-            clearList.remove(clearList.size() - 1);
-            color.remove(color.size() - 1);
-        }
-        if (!point.isEmpty() && !clearList.isEmpty() && clearList.get(clearList.size() - 1) == "p") {
-            point.remove(point.size() - 1);
-            repaint();
-            clearList.remove(clearList.size() - 1);
-            color.remove(color.size() - 1);
-        }
-        if (!ellipse.isEmpty() && !clearList.isEmpty() && clearList.get(clearList.size() - 1) == "e") {
-            ellipse.remove(ellipse.size() - 1);
+        if (!clearList.isEmpty()) {
+            if (!rectang.isEmpty() && clearList.get(clearList.size() - 1) == "r") {
+                rectang.remove(rectang.size() - 1);
+            }
+            if (!point.isEmpty() && clearList.get(clearList.size() - 1) == "p") {
+                point.remove(point.size() - 1);
+            }
+            if (!ellipse.isEmpty() && clearList.get(clearList.size() - 1) == "e") {
+                ellipse.remove(ellipse.size() - 1);
+            }
             repaint();
             clearList.remove(clearList.size() - 1);
             color.remove(color.size() - 1);
@@ -57,20 +53,20 @@ public class DrawPanel extends JPanel implements MouseListener, MouseMotionListe
         rectang.clear();
         ellipse.clear();
         clearList.clear();
+        line.clear();
         point.clear();
         color.clear();
         newColor = Color.BLACK;
     }
 
     void save() {
-        BufferedImage bImg = new BufferedImage(this.getWidth(),this.getHeight(), BufferedImage.TYPE_INT_RGB);
+        BufferedImage bImg = new BufferedImage(this.getWidth(), this.getHeight(), BufferedImage.TYPE_INT_RGB);
         Graphics2D cg = bImg.createGraphics();
         this.paintAll(cg);
         JFileChooser jfc = new JFileChooser();
         try {
             jfc.showSaveDialog(this);
-            if (ImageIO.write(bImg, "png", jfc.getSelectedFile()))
-            {
+            if (ImageIO.write(bImg, "png", jfc.getSelectedFile())) {
                 System.out.println("The file was saved!");
             }
         } catch (IOException e) {
@@ -80,22 +76,12 @@ public class DrawPanel extends JPanel implements MouseListener, MouseMotionListe
     }
 
 
-
     public void paint(Graphics g) {
         super.paint(g);
         Graphics2D g2d = (Graphics2D) g;
-        if (choise == "Kwadrat") {
-            Rectangle2D rectangle = new Rectangle2D.Double(posX - xWidth, topY - yHeight, width, height);
-            g2d.setColor(newColor);
-            g2d.fill(rectangle);
-        }
-        if (choise == "Elipsa") {
-            Ellipse2D ellipse = new Ellipse2D.Double(posX - xWidth, topY - yHeight, width, height);
-            g2d.setColor(newColor);
-            g2d.fill(ellipse);
-        }
+
         if (!clearList.isEmpty()) {
-            int j = 0, k = 0, l = 0;
+            int j = 0, k = 0, l = 0, m = 0;
             for (int i = 0; i < clearList.size(); i++) {
                 g2d.setColor(color.get(i));
                 if (clearList.get(i) == "p") {
@@ -110,37 +96,33 @@ public class DrawPanel extends JPanel implements MouseListener, MouseMotionListe
                     g2d.fill(ellipse.get(l));
                     l++;
                 }
+                if (clearList.get(i) == "l") {
+                    g2d.draw(line.get(m));
+                    m++;
+                }
             }
         }
-//        for (Rectangle2D rect : rectang
-//        ) {
-//            g2d.draw(rect);
-//        }
-//        for (Rectangle2D point : point
-//        ) {
-//            if (newColor != null)
-//                g2d.setColor(newColor);
-//            g2d.fill(point);
-//            //g2d.draw(point);
-//        }
-//        for (Ellipse2D elip : ellipse
-//        ) {
-//            g2d.draw(elip);
-//        }
-
-
+        g2d.setColor(newColor);
+        if (choise == "Kwadrat") {
+            Rectangle2D rectangle = new Rectangle2D.Double(posX - xWidth, topY - yHeight, width, height);
+            g2d.fill(rectangle);
+        }
+        if (choise == "Elipsa") {
+            Ellipse2D ellipse = new Ellipse2D.Double(posX - xWidth, topY - yHeight, width, height);
+            g2d.fill(ellipse);
+        }
+        if(choise =="Linia") {
+            Line2D line = new Line2D.Double(posX- xWidth,topY-yHeight,posX2-xWidth,topY2-yHeight);
+            g2d.draw(line);
+        }
     }
 
     @Override
     public void mouseClicked(MouseEvent e) {
-
-
     }
 
     @Override
     public void mousePressed(MouseEvent e) {
-
-
     }
 
     @Override
@@ -153,7 +135,6 @@ public class DrawPanel extends JPanel implements MouseListener, MouseMotionListe
                 color.add(newColor);
             else
                 color.add(Color.BLACK);
-
         }
         if (choise == "Elipsa") {
             clearList.add("e");
@@ -163,24 +144,30 @@ public class DrawPanel extends JPanel implements MouseListener, MouseMotionListe
             else
                 color.add(Color.BLACK);
         }
-
-
+        if (choise == "Linia") {
+            clearList.add("l");
+            line.add(new Line2D.Double(posX - xWidth, topY - yHeight, posX2 - xWidth, topY2 - yHeight));
+            if (newColor != null)
+                color.add(newColor);
+            else
+                color.add(Color.BLACK);
+        }
     }
 
     @Override
     public void mouseEntered(MouseEvent e) {
-
     }
 
     @Override
     public void mouseExited(MouseEvent e) {
-
     }
 
     @Override
     public void mouseDragged(MouseEvent e) {
         if (choise == "Kwadrat" || choise == "Elipsa")
             drawRectangle(e);
+        if (choise == "Linia")
+            drawLine(e);
         if (choise == "Pędzel") {
             clearList.add("p");
             point.add(new Rectangle2D.Double(e.getX() - xWidth, e.getY() - yHeight, 3, 3));
@@ -197,6 +184,18 @@ public class DrawPanel extends JPanel implements MouseListener, MouseMotionListe
     @Override
     public void mouseMoved(MouseEvent e) {
 
+    }
+
+    public void drawLine(MouseEvent e) {
+        if (first) {
+            posX = e.getX();
+            topY = e.getY();
+            first = false;
+        } else {
+            posX2 = e.getX();
+            topY2 = e.getY();
+        }
+        repaint();
     }
 
     public void drawRectangle(MouseEvent e) {
