@@ -1,3 +1,4 @@
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
@@ -5,6 +6,8 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Rectangle2D;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 
@@ -40,11 +43,13 @@ public class DrawPanel extends JPanel implements MouseListener, MouseMotionListe
             point.remove(point.size() - 1);
             repaint();
             clearList.remove(clearList.size() - 1);
+            color.remove(color.size() - 1);
         }
         if (!ellipse.isEmpty() && !clearList.isEmpty() && clearList.get(clearList.size() - 1) == "e") {
             ellipse.remove(ellipse.size() - 1);
             repaint();
             clearList.remove(clearList.size() - 1);
+            color.remove(color.size() - 1);
         }
     }
 
@@ -56,6 +61,24 @@ public class DrawPanel extends JPanel implements MouseListener, MouseMotionListe
         color.clear();
         newColor = Color.BLACK;
     }
+
+    void save() {
+        BufferedImage bImg = new BufferedImage(this.getWidth(),this.getHeight(), BufferedImage.TYPE_INT_RGB);
+        Graphics2D cg = bImg.createGraphics();
+        this.paintAll(cg);
+        JFileChooser jfc = new JFileChooser();
+        try {
+            jfc.showSaveDialog(this);
+            if (ImageIO.write(bImg, "png", jfc.getSelectedFile()))
+            {
+                System.out.println("The file was saved!");
+            }
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+    }
+
 
 
     public void paint(Graphics g) {

@@ -24,20 +24,21 @@ public class Main extends JFrame {
         addMouseMotionListener(draw);
 
         int y = 30;
-        String[] tab = {"Wyczyść", "Cofnij", "Pędzel", "Kwadrat", "Elipsa", "Kolor", "Kolor tła"};
-        for (int i = 0; i <= 6; i++) {
+        String[] tab = {"Wyczyść", "Cofnij", "Pędzel", "Kwadrat", "Elipsa", "Kolor", "Kolor tła", "Zapisz"};
+        for (int i = 0; i <= 7; i++) {
             JButton button = new JButton("");
             add(button);
             button.setName(tab[i]);
             button.setText(tab[i]);
             button.setFont(new Font("SansSerif", Font.BOLD, 14));
-            button.setBounds(600, y, 100, 50);
+            button.setBounds(600, y, 100, 40);
             button.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     if (button.getText() == tab[0]) {
                         draw.setChoise(tab[0]);
                         draw.clear();
+                        draw.setBackground(null);
                         draw.removeAll();
                         revalidate();
                         repaint();
@@ -65,9 +66,11 @@ public class Main extends JFrame {
                                 "Wybierz kolor", draw.getBackground());
                         draw.setBackground(newColor);
                     }
+                    if(button.getText() == tab[7])
+                        draw.save();
                 }
             });
-            y += 70;
+            y += 60;
         }
 
 
