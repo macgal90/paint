@@ -16,17 +16,20 @@ public class DrawPanel extends JPanel implements MouseListener, MouseMotionListe
     boolean first = true;
     static int xWidth = 50 + 7, yHeight = 50 + 30;
     public ArrayList<Rectangle2D> rectang = new ArrayList<Rectangle2D>();
-    public ArrayList<Rectangle2D> point = new ArrayList<Rectangle2D>();
+    public ArrayList<Ellipse2D> point = new ArrayList<Ellipse2D>();
     public ArrayList<Ellipse2D> ellipse = new ArrayList<Ellipse2D>();
     public ArrayList<Line2D> line = new ArrayList<Line2D>();
     public ArrayList<String> clearList = new ArrayList<>();
     public ArrayList<Color> color = new ArrayList<>();
     private String choise;
+    private  Integer size = 10;
     private Color newColor;
 
     void setChoise(String choise) {
         this.choise = choise;
     }
+
+    void setSize(int size){this.size = size;}
 
     void setNewColor(Color newColor) {
         this.newColor = newColor;
@@ -164,7 +167,7 @@ public class DrawPanel extends JPanel implements MouseListener, MouseMotionListe
             drawLine(e);
         if (choise == "Pędzel") {
             clearList.add("p");
-            point.add(new Rectangle2D.Double(e.getX() - xWidth, e.getY() - yHeight, 3, 3));
+            point.add(new Ellipse2D.Double(e.getX() - xWidth, e.getY() - yHeight, size, size));
             addColor();
             repaint();
         }

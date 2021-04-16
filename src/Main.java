@@ -1,5 +1,6 @@
 import javax.swing.*;
 import javax.swing.border.LineBorder;
+import javax.swing.event.ChangeEvent;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -23,6 +24,11 @@ public class Main extends JFrame {
         addMouseListener(draw);
         addMouseMotionListener(draw);
 
+        JSlider scroll = new JSlider(JSlider.HORIZONTAL,2,20,10);
+        add(scroll);
+        scroll.setBounds(700,125,90,100);
+        scroll.addChangeListener(this::stateChanged);
+
         int y = 30;
         String[] tab = {"Wyczyść", "Cofnij", "Pędzel", "Linia", "Kwadrat", "Elipsa", "Kolor", "Kolor tła", "Zapisz"};
         for (int i = 0; i <= 8; i++) {
@@ -31,7 +37,7 @@ public class Main extends JFrame {
             button.setName(tab[i]);
             button.setText(tab[i]);
             button.setFont(new Font("SansSerif", Font.BOLD, 14));
-            button.setBounds(600, y, 100, 40);
+            button.setBounds(590, y, 100, 40);
             button.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
@@ -77,6 +83,13 @@ public class Main extends JFrame {
         }
 
 
+    }
+
+
+    public void stateChanged(ChangeEvent e) {
+        JSlider source = (JSlider)e.getSource();
+        int size = (int)source.getValue();
+        draw.setSize(size);
     }
 
 
