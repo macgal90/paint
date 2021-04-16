@@ -4,6 +4,8 @@ import javax.swing.event.ChangeEvent;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 
 public class Main extends JFrame {
     DrawPanel draw = new DrawPanel();
@@ -24,10 +26,22 @@ public class Main extends JFrame {
         addMouseListener(draw);
         addMouseMotionListener(draw);
 
-        JSlider scroll = new JSlider(JSlider.HORIZONTAL,2,20,10);
+        JSlider scroll = new JSlider(JSlider.HORIZONTAL, 2, 20, 10);
         add(scroll);
-        scroll.setBounds(700,125,90,100);
+        scroll.setBounds(700, 125, 90, 100);
         scroll.addChangeListener(this::stateChanged);
+
+        JCheckBox fill = new JCheckBox("Fill", false);
+        fill.setBounds(700, 265, 50, 50);
+        add(fill);
+        fill.addItemListener(new ItemListener() {
+            public void itemStateChanged(ItemEvent e) {
+                if (e.getStateChange() == 1)
+                    draw.setFill(true);
+                else
+                    draw.setFill(false);
+            }
+        });
 
         int y = 30;
         String[] tab = {"Wyczyść", "Cofnij", "Pędzel", "Linia", "Kwadrat", "Elipsa", "Kolor", "Kolor tła", "Zapisz"};
@@ -87,8 +101,8 @@ public class Main extends JFrame {
 
 
     public void stateChanged(ChangeEvent e) {
-        JSlider source = (JSlider)e.getSource();
-        int size = (int)source.getValue();
+        JSlider source = (JSlider) e.getSource();
+        int size = (int) source.getValue();
         draw.setSize(size);
     }
 

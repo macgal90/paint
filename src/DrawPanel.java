@@ -22,18 +22,27 @@ public class DrawPanel extends JPanel implements MouseListener, MouseMotionListe
     public ArrayList<String> clearList = new ArrayList<>();
     public ArrayList<Color> color = new ArrayList<>();
     private String choise;
-    private  Integer size = 10;
+    private Integer size = 10;
     private Color newColor;
+    private boolean fill = false;
 
     void setChoise(String choise) {
         this.choise = choise;
     }
 
-    void setSize(int size){this.size = size;}
+    void setSize(int size) {
+        this.size = size;
+    }
 
     void setNewColor(Color newColor) {
         this.newColor = newColor;
     }
+
+    void setFill(boolean fill) {
+        this.fill = fill;
+    }
+
+    ;
 
     void back() {
         if (!clearList.isEmpty()) {
@@ -95,10 +104,18 @@ public class DrawPanel extends JPanel implements MouseListener, MouseMotionListe
                     j++;
                 }
                 if (clearList.get(i) == "r") {
+                    g2d.draw(rectang.get(k));
+                    k++;
+                }
+                if (clearList.get(i) == "rf") {
                     g2d.fill(rectang.get(k));
                     k++;
                 }
                 if (clearList.get(i) == "e") {
+                    g2d.draw(ellipse.get(l));
+                    l++;
+                }
+                if (clearList.get(i) == "ef") {
                     g2d.fill(ellipse.get(l));
                     l++;
                 }
@@ -111,11 +128,17 @@ public class DrawPanel extends JPanel implements MouseListener, MouseMotionListe
         g2d.setColor(newColor);
         if (choise == "Kwadrat") {
             Rectangle2D rectangle = new Rectangle2D.Double(posX - xWidth, topY - yHeight, width, height);
-            g2d.fill(rectangle);
+            if (fill)
+                g2d.fill(rectangle);
+            else
+                g2d.draw((rectangle));
         }
         if (choise == "Elipsa") {
             Ellipse2D ellipse = new Ellipse2D.Double(posX - xWidth, topY - yHeight, width, height);
-            g2d.fill(ellipse);
+            if (fill)
+                g2d.fill(ellipse);
+            else
+                g2d.draw(ellipse);
         }
         if (choise == "Linia") {
             Line2D line = new Line2D.Double(posX - xWidth, topY - yHeight, posX2 - xWidth, topY2 - yHeight);
@@ -135,14 +158,20 @@ public class DrawPanel extends JPanel implements MouseListener, MouseMotionListe
     public void mouseReleased(MouseEvent e) {
         first = true;
         if (choise == "Kwadrat") {
-            clearList.add("r");
             rectang.add(new Rectangle2D.Double(posX - xWidth, topY - yHeight, width, height));
             addColor();
+            if (fill)
+                clearList.add("rf");
+            else
+                clearList.add("r");
         }
         if (choise == "Elipsa") {
-            clearList.add("e");
             ellipse.add(new Ellipse2D.Double(posX - xWidth, topY - yHeight, width, height));
             addColor();
+            if (fill)
+                clearList.add("ef");
+            else
+                clearList.add("e");
         }
         if (choise == "Linia") {
             clearList.add("l");
